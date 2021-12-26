@@ -51,8 +51,8 @@ Graphics::Graphics(XWindow &window)
             exit(1);
         }
         window.currentGC = this->currentGC;
-        Font font = XLoadFont(this->GCdisplay, "7x13bold");
-        XSetFont(this->GCdisplay, this->currentGC, font);
+        //Font font = XLoadFont(this->GCdisplay, "7x13bold");
+        //XSetFont(this->GCdisplay, this->currentGC, font);
         XSetForeground(this->GCdisplay, this->currentGC, this->fontColor);
     // }
     // else{
