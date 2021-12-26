@@ -17,8 +17,15 @@ public:
     void close();
     void show();
     static bool isActive;
-    void runParallel(std::function<void()> &f) { this->task = f; }
-    void runParallel(const std::function<void()> &f) { this->task = f; }
+    
+    template <typename Func, typename... Args>
+    void runParallel(Func func, Args &&...args)
+    {
+        task = [func, args...]()
+        {
+            (func)(args...);
+        };
+    }
     /** to sleep for n milis in parallel task thread*/
     static void sleepms(long milis = 100);
     /** to sleep for n seconds in parallel task thread*/

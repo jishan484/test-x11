@@ -39,10 +39,12 @@ void nothing(Frame &frame)
 
 typedef void* (*cb_t)(void *...);
 cb_t func;
+void *params;
 template <typename P, typename... T>
 void DoSmth(P predicate, T &&...param)
 {
     func = (cb_t)nothing;
+    params = param...;
 }
 
 
@@ -54,7 +56,7 @@ int main(void)
 
     // func = (cb_t)nothing;
     DoSmth(nothing,frame);
-    func(&frame);
+    func(params);
     printf("%d\n",func);
     frame.show();
     return 0;

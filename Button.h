@@ -8,8 +8,14 @@ class Button : public Attachable
 public:
     Button(int x, int y, int width, int height, string text);
     ~Button();
-    void onClick(const std::function<void()> &f);
-    void onClick(std::function<void()> &f);
+    template <typename Func, typename... Args>
+    void onClick(Func func, Args &&...args)
+    {
+        onclick_callback = [func, args...]()
+        {
+            (func)(args...);
+        };
+    }
 
 private:
     Window parent;
@@ -88,14 +94,6 @@ void Button::onRightClick(XEvent &event)
     if(onclick_callback != 0){
         onclick_callback();
     }
-}
-void Button::onClick(const std::function<void()> &f)
-{
-    this->onclick_callback = f;
-}
-void Button::onClick(std::function<void()> &clbk)
-{
-    this->onclick_callback = clbk;
 }
 
 #endif

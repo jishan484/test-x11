@@ -65,6 +65,7 @@ void Graphics::GCdrawText(int x, int y, string text , int size)
     const char * charText = text.c_str();
     size = (size == 0 || size > strlen(charText))?strlen(charText):size;
     XDrawString(this->GCdisplay, this->GCwindow, this->currentGC, x, y, charText, size);
+    XFlush(this->GCdisplay);
 }
 
 void Graphics::setFontColor(int r, int g, int b)
