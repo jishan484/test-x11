@@ -62,7 +62,7 @@ void Button::reDraw()
     char buffer[50];
     strcpy(buffer, this->text.c_str());
     GC currentGC = XCreateGC(this->display, this->currentWindow,0, 0);
-    Font font = XLoadFont(this->display, "7x13bold");
+    Font font = XLoadFont(this->display, "7*bold");
     XSetForeground(this->display, currentGC, 0x122a6b);
     XSetFont(this->display,currentGC,font);
     XDrawString(this->display, this->currentWindow, currentGC, (this->width / 2) - (strlen(buffer) * 3), (this->height / 2) + 4, buffer, strlen(buffer));
