@@ -6,6 +6,8 @@
 
 #define FANPIN 26
 
+bool stopNow = false;
+
 int alarmHour = 0;
 int alarmMinute = 0;
 
@@ -68,7 +70,8 @@ int main()
 
     //set events for all elements [wow copilot]
     stop.onClick([&]() {
-        frame.close();
+        stopNow = true;
+        gpiowrite(FANPIN, 0);
     });
     hoursP.onClick([&]() {
         if (hour < 23) hour++;
@@ -111,7 +114,7 @@ void startAlarm()
 {
     gpiowrite(FANPIN, 0);
     int i = 600;
-    while (i-- > 0)
+    while (i-- > 0 || !stopNow)
     {
         printf("bip\n");
         gpiowrite(FANPIN, 1);
@@ -132,4 +135,5 @@ void startAlarm()
         usleep(1000000);
     }
     gpiowrite(FANPIN, 0);
+    stopNow = false;
 }
