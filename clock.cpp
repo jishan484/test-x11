@@ -33,7 +33,7 @@ void loop(Frame *frame , Label * nextalarm,Label * currentTime)
     if(alarmHour > currentHour)
     {
         remainingHours = alarmHour - currentHour;
-        if(currentMinute > alarmMinute) remainingHours -= 1;
+        if(currentMinute >= alarmMinute) remainingHours -= 1;
     }
     else if(alarmHour == currentHour)
     {
@@ -51,7 +51,7 @@ void loop(Frame *frame , Label * nextalarm,Label * currentTime)
     Frame::sleep(1);
 
     //if time is up
-    if(remainingHours == 0 && remainingMinutes == 0){
+    if(remainingHours == 0 && remainingMinutes == 0 && remainingSeconds == 1){
         //alarm start
         startAlarm();
     }
