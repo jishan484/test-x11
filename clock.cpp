@@ -13,7 +13,7 @@ int alarmMinute = 0;
 
 void startAlarm();
 
-void loop(Frame *frame , Label * nextalarm)
+void loop(Frame *frame , Label * nextalarm,Label * currentTime)
 {
     //get current time
     time_t now = time(0);
@@ -21,10 +21,30 @@ void loop(Frame *frame , Label * nextalarm)
     int currentHour = ltm->tm_hour;
     int currentMinute = ltm->tm_min;
     int currentSecond = ltm->tm_sec;
-    //remaining time for alarm
-    int remainingHours = (currentHour < alarmHour)?(alarmHour - currentHour):((currentHour == alarmHour && currentMinute < alarmMinute)? 0:(23 - currentHour + alarmHour));
-    int remainingMinutes = (currentMinute <= alarmMinute)?(alarmMinute - currentMinute):(60 - currentMinute + alarmMinute);
-    int remainingSeconds = (60 - currentSecond) % 60;
+    //set current time
+    currentTime->drawText("Current time is " + (currentHour < 10 ? "0" + to_string(currentHour) : to_string(currentHour)) 
+    + ":" + (currentMinute < 10 ? "0" + to_string(currentMinute) : to_string(currentMinute))
+    + ":" + (currentSecond < 10 ? "0" + to_string(currentSecond) : to_string(currentSecond)));
+    //get remaining time for alarm
+    int remainingSeconds = (60 - currentSecond);
+    int remainingMinutes = (alarmMinute > currentMinute ? (alarmMinute - currentMinute) : (60 - currentMinute + alarmMinute));
+    //calculate remaining hours for alarm
+    int remainingHours = 0;
+    if(alarmHour > currentHour)
+    {
+        remainingHours = alarmHour - currentHour;
+        if(currentMinute > alarmMinute) remainingHours -= 1;
+    }
+    else if(alarmHour == currentHour)
+    {
+        if(alarmMinute > currentMinute) remainingHours = 0;
+        else remainingHours = 23;
+    }
+    else remainingHours = 23 - currentHour + alarmHour;
+    
+    //int remainingHours = (currentHour<alarmHour)?(alarmHour-currentHour):(currentHour == alarmHour && currentMinute < alarmMinute)?0:((currentHour - alarmHour) == 1 && currentMinute> alarmMinute)?0:(23-currentHour+alarmHour);
+    //int remainingMinutes = (currentMinute <= alarmMinute)?(alarmMinute - currentMinute):(60 - currentMinute + alarmMinute);
+    
     nextalarm->drawText("Next alarm in " + (remainingHours < 10 ? "0" + to_string(remainingHours) : to_string(remainingHours)) 
     + ":" + (remainingMinutes < 10 ? "0" + to_string(remainingMinutes) : to_string(remainingMinutes))
     + ":" + (remainingSeconds < 10 ? "0" + to_string(remainingSeconds) : to_string(remainingSeconds)));
@@ -51,7 +71,8 @@ int main()
     //define all elements
     Label hours(frame, 175, 30 , 50);
     Label minutes(frame, 265, 30 , 50);
-    Label details(frame, 234, 150);
+    Label details(frame, 234, 130);
+    Label currentTime(frame, 214, 150);
     Label nextalarm(frame, 220, 170);
     Button hoursP(150, 40, 70, 20, "H + 1");
     Button hoursN(150, 70, 70, 20, "H - 1");
@@ -66,6 +87,7 @@ int main()
     details.setFontColor(200, 0, 200);
     nextalarm.setFontColor(200, 100, 20);
     details.drawText("Alarm set at 00:00");
+    currentTime.drawText("Current time is 00:00:00");
     nextalarm.drawText("Next alarm in 00:00");
 
     //set events for all elements [wow copilot]
@@ -99,6 +121,7 @@ int main()
     frame.attach(hours);
     frame.attach(minutes);
     frame.attach(details);
+    frame.attach(currentTime);
     frame.attach(nextalarm);
     frame.attach(hoursP);
     frame.attach(hoursN);
@@ -106,7 +129,7 @@ int main()
     frame.attach(minutesN);
     frame.attach(set);
     frame.attach(stop);
-    frame.runParallel(loop,&frame, &nextalarm);
+    frame.runParallel(loop,&frame, &nextalarm, &currentTime);
     frame.show();
 }
 
