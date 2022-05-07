@@ -28,7 +28,7 @@ Label::Label(XWindow &window , int x,int y,int width,int height) : Graphics(wind
 {
     this->x = x;
     this->y = y;
-    this->width = (width==0)?window.width-x:width;
+    this->width = (width==0)?(window.width-x):width;
     this->height = height;
     this->textSize = (width / 7) - 1;
 }
@@ -47,7 +47,7 @@ void Label::drawText(string text)
     this->text = text;
     if(isRemoved)return;
     XClearArea(this->GCdisplay, this->GCwindow, x, y - 11, width, height, 0);
-    this->GCdrawText(x+5,y,this->text.c_str(),this->textSize);
+    this->GCdrawText(this->x+5,this->y,this->text.c_str(),this->textSize);
 }
 
 void Label::reDraw()

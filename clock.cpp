@@ -2,7 +2,7 @@
 #include "Button.h"
 #include "Label.h"
 #include <time.h>
-#include "GPIO.h"
+// #include "GPIO.h"
 
 #define FANPIN 26
 
@@ -49,12 +49,14 @@ void loop(Frame *frame , Label * nextalarm,Label * currentTime)
     + ":" + (remainingMinutes < 10 ? "0" + to_string(remainingMinutes) : to_string(remainingMinutes))
     + ":" + (remainingSeconds < 10 ? "0" + to_string(remainingSeconds) : to_string(remainingSeconds)));
     Frame::sleep(1);
-
     //if time is up
     if(remainingHours == 0 && remainingMinutes == 0 && remainingSeconds == 1){
         //alarm start
-        startAlarm();
+        // startAlarm();
     }
+
+    //if stop button is pressed
+    
 }
 
 int main()
@@ -63,9 +65,9 @@ int main()
     int minute = 0;
     
     //setip GPIO
-    gpiosetup();
-    gpiosetout(FANPIN);
-    gpiowrite(FANPIN, 0);
+    // gpiosetup();
+    // gpiosetout(FANPIN);
+    // gpiowrite(FANPIN, 0);
 
     Frame frame(600, 300);
     //define all elements
@@ -93,7 +95,7 @@ int main()
     //set events for all elements [wow copilot]
     stop.onClick([&]() {
         stopNow = true;
-        gpiowrite(FANPIN, 0);
+        // gpiowrite(FANPIN, 0);
     });
     hoursP.onClick([&]() {
         if (hour < 23) hour++;
@@ -129,34 +131,35 @@ int main()
     frame.attach(minutesN);
     frame.attach(set);
     frame.attach(stop);
+
     frame.runParallel(loop,&frame, &nextalarm, &currentTime);
     frame.show();
 }
 
 void startAlarm()
 {
-    gpiowrite(FANPIN, 0);
-    int i = 600;
-    while (i-- > 0 || !stopNow)
-    {
-        printf("bip\n");
-        gpiowrite(FANPIN, 1);
-        usleep(100000);
-        gpiowrite(FANPIN, 0);
-        usleep(100000);
-        gpiowrite(FANPIN, 1);
-        usleep(100000);
-        gpiowrite(FANPIN, 0);
-        usleep(100000);
-        gpiowrite(FANPIN, 1);
-        usleep(100000);
-        gpiowrite(FANPIN, 0);
-        usleep(100000);
-        gpiowrite(FANPIN, 1);
-        usleep(400000);
-        gpiowrite(FANPIN, 0);
-        usleep(1000000);
-    }
-    gpiowrite(FANPIN, 0);
-    stopNow = false;
+    // gpiowrite(FANPIN, 0);
+    // int i = 600;
+    // while (i-- > 0 || !stopNow)
+    // {
+    //     printf("bip\n");
+    //     gpiowrite(FANPIN, 1);
+    //     usleep(100000);
+    //     gpiowrite(FANPIN, 0);
+    //     usleep(100000);
+    //     gpiowrite(FANPIN, 1);
+    //     usleep(100000);
+    //     gpiowrite(FANPIN, 0);
+    //     usleep(100000);
+    //     gpiowrite(FANPIN, 1);
+    //     usleep(100000);
+    //     gpiowrite(FANPIN, 0);
+    //     usleep(100000);
+    //     gpiowrite(FANPIN, 1);
+    //     usleep(400000);
+    //     gpiowrite(FANPIN, 0);
+    //     usleep(1000000);
+    // }
+    // gpiowrite(FANPIN, 0);
+    // stopNow = false;
 }

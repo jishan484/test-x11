@@ -63,7 +63,8 @@ Graphics::Graphics(XWindow &window)
 void Graphics::GCdrawText(int x, int y, string text , int size)
 {
     const char * charText = text.c_str();
-    size = (size == 0 || size > strlen(charText))?strlen(charText):size;
+    int txtsize = strlen(charText);
+    size = (size == 0 || size > txtsize)?txtsize:size;
     XDrawString(this->GCdisplay, this->GCwindow, this->currentGC, x, y, charText, size);
     XFlush(this->GCdisplay);
 }
